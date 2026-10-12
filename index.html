@@ -1,40 +1,58 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>REAL MATH V2 Fixed</title><style>
+<title>LIVE REAL MATH</title><style>
 body{margin:0;background:#0f172a;color:#fff;font-family:sans-serif;padding:8px}
 .card{max-width:420px;margin:auto;background:#1e293b;border-radius:18px;padding:14px;border:1px solid #334155}
 .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:10px}
 .grid div{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:6px;text-align:center}
-.bar{height:6px;background:#334155;border-radius:6px;overflow:hidden}.fill{height:100%}
 .sig{border:2px solid #22c55e;border-radius:14px;padding:12px;background:#052e16;margin-top:12px}
-.ticks{display:flex;flex-wrap:wrap;gap:3px;background:#0f172a;padding:8px;border-radius:10px;margin-top:10px;min-height:50px}
+.ticks{display:flex;flex-wrap:wrap;gap:3px;background:#0f172a;padding:8px;border-radius:10px;margin-top:10px;min-height:60px}
 .btn{flex:1;padding:10px;border-radius:12px;border:1px solid #334155;background:#1e293b;color:#fff;font-weight:800}
-.active{background:#3b82f6!important}
-.math{font-size:8px;color:#94a3b8;background:#0f172a;padding:6px;border-radius:8px;margin-top:6px;border:1px solid #334155}
-</style></head>
-<body>
+.bar{height:6px;background:#334155;border-radius:6px;overflow:hidden}.fill{height:100%}
+</style></head><body>
 <div class="card">
-<div style="display:flex;justify-content:space-between"><b>REAL MATH V2 FIXED</b><span id="live" style="color:#22c55e;font-size:10px">● CONNECTING...</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><b>LIVE REAL MATH ⚡</b><span id="live" style="color:#fbbf24;font-size:10px">● CONNECTING DERIV...</span></div>
+<div id="status" style="font-size:9px;color:#fbbf24;margin-top:6px;background:#0f172a;padding:6px;border-radius:8px;border:1px solid #334155">Step 1: Connecting to wss://ws.derivws.com...</div>
 
-<div style="display:flex;gap:6px;margin-top:10px">
-<button id="bM" class="btn active" onclick="setTab('m')">MATCHES • Z-Score</button>
-<button id="bR" class="btn" onclick="setTab('r')">RISE/FALL • EMA+RSI</button>
-</div>
-
-<div id="tabM">
 <div class="grid" id="grid"></div>
-<div class="sig" id="sigM"><div style="display:flex;justify-content:space-between"><span style="font-size:10px">Z-SCORE SIGNAL</span><span id="timeM" style="font-size:9px"></span></div>
+
+<div class="sig" id="sig"><div style="display:flex;justify-content:space-between"><span style="font-size:10px">LIVE Z-SCORE • REAL DATA</span><span id="time" style="font-size:9px"></span></div>
 <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
-<div id="digitM" style="width:60px;height:60px;background:#334155;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900">-</div>
-<div><div style="font-size:8px">REAL EDGE</div><div id="confM" style="font-size:24px;font-weight:900">--%</div><div id="zM" style="font-size:9px">Z: --</div></div>
-<div style="margin-left:auto;text-align:right"><div id="priceM" style="font-weight:800">--</div><div style="font-size:8px">LAST DIGIT</div><div id="lastM" style="font-size:18px;font-weight:800">-</div></div>
+<div id="digit" style="width:70px;height:70px;background:#fff;color:#000;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900">-</div>
+<div><div style="font-size:8px">REAL EDGE</div><div id="conf" style="font-size:26px;font-weight:900">--%</div><div id="z" style="font-size:10px">Z: -- | Live ticks</div></div>
+<div style="margin-left:auto;text-align:right"><div id="price" style="font-weight:800">--</div><div style="font-size:8px">PRICE</div><div id="last" style="font-size:20px;font-weight:800">-</div></div>
 </div>
-<div class="math" id="mathM">Formula: Z = (count-10)/3 | High Z = HOT</div>
-<div id="tradeM" style="margin-top:8px;font-size:11px;font-weight:700;background:#fbbf24;color:#000;padding:6px;border-radius:8px;text-align:center">Loading ticks...</div>
-</div>
-<div id="ticksM" class="ticks"></div>
+<div id="trade" style="margin-top:10px;font-size:12px;font-weight:800;background:#fbbf24;color:#000;padding:8px;border-radius:10px;text-align:center">Waiting for live ticks from Deriv...</div>
 </div>
 
-<div id="tabR" style="display:none">
-<div class="sig" id="sigR" style="border-color:#3b82f6;background:#0f172a"><div style="display:flex;justify-content:space-between"><span id="typeR" style="font-size:10px">EMA+RSI</span><span id="timeR" style="font-size:9px"></span></div>
-<div style="display:flex;gap:12px;align-items:center;margin-top:8px">
-<div id="arrowR" style="width:60px;height:60px;background:#334155;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px
+<div id="ticks" class="ticks"></div>
+
+<div style="display:flex;gap:6px;margin-top:12px"><button class="btn" onclick="connectLive()" style="background:#22c55e;color:#000">🔴 GO LIVE</button><button class="btn" onclick="location.reload()">🔄 Reload</button></div>
+<div style="font-size:8px;color:#94a3b8;margin-top:8px">If still CONNECTING: 1) Switch to WiFi 2) Turn on 1.1.1.1 app (WARP) 3) Open in Chrome not in WhatsApp browser</div>
+</div>
+
+<script>
+let ticks=[],prices=[],ws=null;
+function log(msg,col="#fbbf24"){document.getElementById('status').innerText=msg;document.getElementById('status').style.color=col;document.getElementById('live').innerText="● "+msg;document.getElementById('live').style.color=col;}
+
+function getLastDigit(quote){
+  let s=quote.toString();
+  if(!s.includes(".")) return parseInt(s.slice(-1));
+  let dec=s.split(".")[1];
+  return parseInt(dec.slice(-1));
+}
+
+function analyze(){
+ if(ticks.length<10) return;
+ let counts=Array(10).fill(0);ticks.forEach(d=>counts[d]++);
+ let exp=ticks.length/10,std=Math.sqrt(ticks.length*0.1*0.9)||3;
+ let zScores=counts.map(c=>(c-exp)/std);
+ let maxZ=Math.max(...zScores),hot=zScores.indexOf(maxZ);
+ let conf=10+maxZ*1.8;conf=Math.max(9,Math.min(19,conf));
+ document.getElementById('digit').innerText=hot;
+ document.getElementById('conf').innerText=conf.toFixed(1)+"% REAL";
+ document.getElementById('z').innerText=`Z:${maxZ.toFixed(2)} | ${counts[hot]}/${ticks.length} ticks | Live`;
+ document.getElementById('trade').innerText=`LIVE: TRADE Digit ${hot} MATCHES • Z=${maxZ.toFixed(2)}`;
+ document.getElementById('price').innerText=prices[0].toFixed(3);
+ document.getElementById('last').innerText=ticks[0];
+ document.getElementById('time').innerText=new Date().toLocaleTimeString()+" • R_100 LIVE";
+ let g="";counts.forEach((c,i)=>{let isHot=i==hot;g+=`<div style="${isHot?'border-color:#22c55e;background:#052e16':''}"><div style="font-weight:800">${i}</div><div style="font-size:10px">${c}</div><div class="bar"><div class="fill" style="width:${c*5
